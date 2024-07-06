@@ -72,13 +72,13 @@ User.sync({alter: true}).then(() =>{
     //     [Op.gt]: 5  // operator > greater than
     //   }
     // }});  // operator >
-    return User.findAll({ where: 
-      sequelize.where(sequelize.fn('char_length', sequelize.col('username')), 3) // operator char_length
-  });
-
+    // return User.findAll({ where: 
+    //   sequelize.where(sequelize.fn('char_length', sequelize.col('username')), 3) // operator char_length
+    return User.max('user_id');  // get max user_id
+    // return User.max('user_id', { where:{is_admin: true} });  // get max user_id where is_admin is true
 })
 .then((data) => {
-    data.forEach(el => console.log(el.toJSON()))
+    console.log(data)
 })
 .catch((err) => {
     console.error('Unable to sync table and model:', err);
