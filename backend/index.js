@@ -1,4 +1,5 @@
 const Sequelize = require('sequelize');
+const { DataTypes } = Sequelize;
 require('dotenv').config();
 
 
@@ -9,6 +10,9 @@ if (!process.env.DATABASE_URL) {
 
 const sequelize = new Sequelize(process.env.DATABASE_URL, {
     dialect: 'postgres',
+    define : {
+        freezeTableName: true // do not pluralize table names for every model 
+    }
 });
 
 // sequelize
@@ -22,27 +26,28 @@ const sequelize = new Sequelize(process.env.DATABASE_URL, {
 
 const User = sequelize.define('user', {
     user_id: {
-        type: Sequelize.DataTypes.INTEGER,
+        type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
     },
     username: {
-        type: Sequelize.DataTypes.STRING,
+        type: DataTypes.STRING,
         allowNull: false,
+        unique: true,
         
 
 
     },
     password: {
-        type: Sequelize.DataTypes.STRING,
+        type: DataTypes.STRING,
         allowNull: false,
     },
     email: {
-        type: Sequelize.DataTypes.STRING,
+        type: DataTypes.STRING,
         allowNull: false,
     },
     is_admin : {
-        type: Sequelize.DataTypes.BOOLEAN,
+        type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false
     }
@@ -52,8 +57,30 @@ const User = sequelize.define('user', {
     timestamps: false,
 });
 
+// User.drop();
+// sequelize.drop({mach: /_test$/}); // drop all tables with name ending with _test
+// sequelize.models.user // get all models
+ 
 User.sync({alter: true}).then(() =>{
-    console.log('Table and model synced successfully');
+    // working with updated table
+    // const user = User.build({
+    //     username: 'test',
+    //     password: 'test',
+    //     email: 'test',
+    //     is_admin: false
+    // });
+    // return user.save();
+
+    // better way
+    return User.create({
+        username: 'someone new',
+        password: 'test',
+        email: 'test@mail.com',
+        is_admin: true
+    })
+}).then((data) => {
+    console.log(data);
+    console.log(`User created: ${data.dataValues.username}`);
 }).catch((err) => {
     console.error('Unable to sync table and model:', err);
 });
