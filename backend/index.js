@@ -77,20 +77,30 @@ User.sync({alter: true}).then(() =>{
     // return User.decrement({age: 1}, {where: {user_id: 1}});
 
     // better way
-    return User.create({
-        username: 'heLlo',
-        password: 'test',
-        email: 'test@mail.com',
-        is_admin: false
-    })
-}).then((data) => {
-    console.log(data.toJSON());
-    data.username = 'pizza'
-    return data.save();
-}).then((data) => {
-    console.log(data.toJSON());
-    console.log('user updated');
-
+    // return User.create({
+    //     username: 'heLlo',
+    //     password: 'test',
+    //     email: 'test@mail.com',
+    //     is_admin: false
+    // })
+    // bulk create
+    return User.bulkCreate([
+        {
+            username: 'test8',
+            password: 'test8',
+            email: 'test8@mail.com',
+            is_admin: false
+        },
+        {
+            username: 'test9',
+            password: 'test9',
+            email: 'test9@mail.com',
+            is_admin: false
+        }
+    ])
+})
+.then((data) => {
+    data.forEach(user => console.log(user, user.toJSON()))
 })
 .catch((err) => {
     console.error('Unable to sync table and model:', err);
