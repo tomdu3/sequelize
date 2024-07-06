@@ -71,16 +71,27 @@ User.sync({alter: true}).then(() =>{
     // });
     // return user.save();
 
+    // increment and decrement fields
+    // example for age: 20;
+    // return User.increment({age: 1}, {where: {user_id: 1}});
+    // return User.decrement({age: 1}, {where: {user_id: 1}});
+
     // better way
     return User.create({
-        username: 'someone new',
+        username: 'heLlo',
         password: 'test',
         email: 'test@mail.com',
-        is_admin: true
+        is_admin: false
     })
 }).then((data) => {
-    console.log(data);
-    console.log(`User created: ${data.dataValues.username}`);
-}).catch((err) => {
+    console.log(data.toJSON());
+    data.username = 'pizza'
+    return data.save();
+}).then((data) => {
+    console.log(data.toJSON());
+    console.log('user updated');
+
+})
+.catch((err) => {
     console.error('Unable to sync table and model:', err);
 });
