@@ -83,20 +83,26 @@ User.sync({alter: true}).then(() =>{
     //     email: 'test@mail.com',
     //     is_admin: false
     // })
-    // bulk create
+    // bulk create  - avoid doing this, because of validation
     return User.bulkCreate([
         {
-            username: 'test8',
-            password: 'test8',
-            email: 'test8@mail.com',
+            username: 'Bob',
+            password: 'test',
+            email: 'test@mail.com',
             is_admin: false
         },
         {
-            username: 'test9',
-            password: 'test9',
-            email: 'test9@mail.com',
+            username: 'Alice',
+            password: 'test',
+            email: 'test@mail.com',
             is_admin: false
-        }
+        },
+        {
+            username: 'John',
+            password: 'test',
+            email: 'test@mail.com',
+            is_admin: false
+        }  
     ])
 })
 .then((data) => {
