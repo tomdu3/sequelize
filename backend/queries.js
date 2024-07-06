@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-const { DataTypes. Op } = Sequelize;
+const { DataTypes, Op } = Sequelize;
 require('dotenv').config();
 
 
@@ -58,16 +58,25 @@ User.sync({alter: true}).then(() =>{
     // return User.findAll({ attributes: ['username'], where: {password: 'test', is_admin: true }}); // only get username where password is test and is_admin
     // return User.findAll({ attributes: ['username'], where: {password: 'test' }, limit: 3});  // add limit
     // return User.findAll({ attributes: ['username'], order: [['username', 'DESC']] });  // add order in descending order
-    return User.findAll({
-      attributes: [ 'is_admin',
-        [sequelize.fn('COUNT', sequelize.col('user_id')), 'user_id_count']
-      ],
-      group: ['is_admin'],
-    });  // add group by is_admin and count user_id (users)
+    // return User.findAll({
+    //   attributes: [ 'is_admin',
+    //     [sequelize.fn('COUNT', sequelize.col('user_id')), 'user_id_count']
+    //   ],
+    //   group: ['is_admin'],
+    // });  // add group by is_admin and count user_id (users)
+    // return User.findAll({ where:{
+    //   [Op.or]: [ {password: 'test', is_admin : true}]
+    // }});  // operator OR
+    // return User.findAll({ where:{
+    //   user_id: {
+    //     [Op.gt]: 5  // operator > greater than
+    //   }
+    // }});  // operator >
+    return User.findAll({ where: 
+      sequelize.where(sequelize.fn('char_length', sequelize.col('username')), 3) // operator char_length
+  });
 
-    
-
-  })
+})
 .then((data) => {
     data.forEach(el => console.log(el.toJSON()))
 })
