@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 const { DataTypes } = Sequelize;
 require('dotenv').config();
 const bcrypt = require('bcrypt');
-
+const zlib = require('zlib');
 
 if (!process.env.DATABASE_URL) {
     throw new Error('DATABASE_URL environment variable is not set');
@@ -61,6 +61,20 @@ const User = sequelize.define('user', {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false
+    },
+    description: {
+        type: DataTypes.STRING,
+        defaultValue: 'No description available at the moment',
+        // compressing and uncompressing data
+        set(value) {
+            const compressed = zlib.deflateSync(value).toString('base64');
+            this.setDataValue('description', compressed);
+        },
+        get() {
+            const value = this.getDataValue('description');
+            const decompressed = zlib.inflateSync(Buffer.from(value, 'base64'));
+            return decompressed.toString();
+        }   
     }
 },
 {
@@ -116,15 +130,18 @@ User.sync({alter: true}).then(() =>{
     //     }  
     // ])
     return User.create({
-        username: 'Witt',
-        password: 'soccerisfun67',
+        username: 'Widdabe',
+        password: 'soccerpizza',
         email: 'test@mail.com',
+        description: 'this is a description that doesn\'t say a thing but we need to keep it here'
     })
 })
 .then((data) => {
     // data.forEach(user => console.log(user, user.toJSON()))
     console.log(data.username);
     console.log(data.password);
+    console.log(data.email);
+    console.log(data.description);
 })
 .catch((err) => {
     console.error('Unable to sync table and model:', err);
