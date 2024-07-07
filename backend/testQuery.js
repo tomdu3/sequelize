@@ -60,7 +60,7 @@ Student.sync().then(() =>{
     return Student.findAll({
         // count total amount of students in each school year returned column alias num_students
         attributes: [
-            [sequelize.fn('COUNT', sequelize.col('school_year')), 'num_students']
+            [sequelize.fn('COUNT', sequelize.col('school_year')), 'num_students'], 'school_year'
         ],
         group: 'school_year'
     })
