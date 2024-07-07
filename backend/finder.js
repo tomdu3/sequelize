@@ -49,13 +49,15 @@ const Student = sequelize.define('student', {
 Student.sync().then(() =>{
 
    // finder method instead of findAll
-   return Student.findAll({
-    where: { subscribed_to_wittcode: true },
-    raw: true,  // it is like toJSON()
-    })
+//    return Student.findAll({
+//     where: { subscribed_to_wittcode: true },
+//     raw: true,  // it is like toJSON()
+//     })
+
+   return Student.findByPk(5);
 })
 .then((data) => {
-    console.log(data)
+    console.log(data.toJSON())
 })
 .catch((err) => {
     console.error('Unable to sync table and model:', err);
