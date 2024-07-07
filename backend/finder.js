@@ -54,17 +54,25 @@ Student.sync().then(() =>{
 //     raw: true,  // it is like toJSON()
 //     })
 
-   return Student.findByPk(5),
-   Student.findOne(),
-   Student.findOne({
-    where: {
-        subscribed_to_wittcode: true
-    }
-});;
+//    return Student.findByPk(5),
+//    Student.findOne(),
+//    Student.findOne({
+//     where: {
+//         subscribed_to_wittcode: true
+//     }
+// });
+    return Student.findAndCountAll({
+        where: {
+            favorite_class: 'Computer Science',
+        },
+        raw: true
+    }) 
 
 })
 .then((data) => {
-    console.log(data)
+    const {count, rows } = data;
+    console.log(count);
+    console.log(rows);
 })
 .catch((err) => {
     console.error('Unable to sync table and model:', err);
