@@ -24,12 +24,17 @@ const Student = sequelize.define('student', {
     name: {
         type: DataTypes.STRING,
         allowNull: false,
-        validators: {
+        validate: {
             notEmpty: true,
             length: {
                 min: 4,
                 max: 20
             }
+        },
+        // getter method
+        get() {
+            const rawValue = this.getDataValue('name');
+            return rawValue.toUpperCase();
         }
     },
     favorite_class: {
@@ -61,18 +66,16 @@ Student.sync().then(() =>{
 //         subscribed_to_wittcode: true
 //     }
 // });
-    return Student.findAndCountAll({
-        where: {
-            favorite_class: 'Computer Science',
-        },
-        raw: true
-    }) 
-
+    // return Student.findAndCountAll({
+    //     where: {
+    //         favorite_class: 'Computer Science',
+    //     },
+    //     raw: true
+    // }) 
+    return Student.findOne();
 })
 .then((data) => {
-    const {count, rows } = data;
-    console.log(count);
-    console.log(rows);
+    console.log(data.name)
 })
 .catch((err) => {
     console.error('Unable to sync table and model:', err);
