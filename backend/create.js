@@ -60,7 +60,8 @@ Student.sync().then(() =>{
    })
 })
 .then((data) => {
-    console.log(data)
+    const [result, created] = data;
+    console.log(created)
 })
 .catch((err) => {
     console.error('Unable to sync table and model:', err);
