@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const { DataTypes } = Sequelize;
 require('dotenv').config();
-
+const bcrypt = require('bcrypt');
 
 
 if (!process.env.DATABASE_URL) {
@@ -34,13 +34,24 @@ const User = sequelize.define('user', {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
-        
-
-
+        get() {
+            const rawValue = this.getDataValue('username');
+            return rawValue.toUpperCase();
+        }
     },
     password: {
         type: DataTypes.STRING,
         allowNull: false,
+
+        set(value) {
+            const salt = bcrypt.genSaltSync(12);
+            const hash = bcrypt.hashSync(value, salt);
+            this.setDataValue('password', hash);
+        },
+        get() {
+            const rawValue = this.getDataValue('password');
+            return rawValue;
+        }
     },
     email: {
         type: DataTypes.STRING,
@@ -84,29 +95,36 @@ User.sync({alter: true}).then(() =>{
     //     is_admin: false
     // })
     // bulk create  - avoid doing this, because of validation
-    return User.bulkCreate([
-        {
-            username: 'Bob',
-            password: 'test',
-            email: 'test@mail.com',
-            is_admin: false
-        },
-        {
-            username: 'Alice',
-            password: 'test',
-            email: 'test@mail.com',
-            is_admin: false
-        },
-        {
-            username: 'John',
-            password: 'test',
-            email: 'test@mail.com',
-            is_admin: false
-        }  
-    ])
+    // return User.bulkCreate([
+    //     {
+    //         username: 'Bob',
+    //         password: 'test',
+    //         email: 'test@mail.com',
+    //         is_admin: false
+    //     },
+    //     {
+    //         username: 'Alice',
+    //         password: 'test',
+    //         email: 'test@mail.com',
+    //         is_admin: false
+    //     },
+    //     {
+    //         username: 'John',
+    //         password: 'test',
+    //         email: 'test@mail.com',
+    //         is_admin: false
+    //     }  
+    // ])
+    return User.create({
+        username: 'Witt',
+        password: 'soccerisfun67',
+        email: 'test@mail.com',
+    })
 })
 .then((data) => {
-    data.forEach(user => console.log(user, user.toJSON()))
+    // data.forEach(user => console.log(user, user.toJSON()))
+    console.log(data.username);
+    console.log(data.password);
 })
 .catch((err) => {
     console.error('Unable to sync table and model:', err);

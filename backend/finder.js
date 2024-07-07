@@ -35,7 +35,7 @@ const Student = sequelize.define('student', {
         get() {
             const rawValue = this.getDataValue('name');
             return rawValue.toUpperCase();
-        }
+        },
     },
     favorite_class: {
         type: DataTypes.STRING,
