@@ -54,10 +54,17 @@ Student.sync().then(() =>{
 //     raw: true,  // it is like toJSON()
 //     })
 
-   return Student.findByPk(5);
+   return Student.findByPk(5),
+   Student.findOne(),
+   Student.findOne({
+    where: {
+        subscribed_to_wittcode: true
+    }
+});;
+
 })
 .then((data) => {
-    console.log(data.toJSON())
+    console.log(data)
 })
 .catch((err) => {
     console.error('Unable to sync table and model:', err);
