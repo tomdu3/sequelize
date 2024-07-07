@@ -75,6 +75,13 @@ const User = sequelize.define('user', {
             const decompressed = zlib.inflateSync(Buffer.from(value, 'base64'));
             return decompressed.toString();
         }   
+    },
+    // virtual fields
+    fullName: {
+        type: DataTypes.VIRTUAL,
+        get() {
+            return `${this.getDataValue('username')} ${this.getDataValue('email')}`;
+        }
     }
 },
 {
@@ -129,19 +136,21 @@ User.sync({alter: true}).then(() =>{
     //         is_admin: false
     //     }  
     // ])
-    return User.create({
-        username: 'Widdabe',
-        password: 'soccerpizza',
-        email: 'test@mail.com',
-        description: 'this is a description that doesn\'t say a thing but we need to keep it here'
-    })
+    // return User.create({
+    //     username: 'Widdabe',
+    //     password: 'soccerpizza',
+    //     email: 'test@mail.com',
+    //     description: 'this is a description that doesn\'t say a thing but we need to keep it here'
+    // })
+    return User.findOne({where: {username: 'Widdabe'}})
 })
 .then((data) => {
     // data.forEach(user => console.log(user, user.toJSON()))
-    console.log(data.username);
-    console.log(data.password);
-    console.log(data.email);
-    console.log(data.description);
+    // console.log(data.username);
+    // console.log(data.password);
+    // console.log(data.email);
+    // console.log(data.description);
+    console.log(data.fullName);
 })
 .catch((err) => {
     console.error('Unable to sync table and model:', err);
